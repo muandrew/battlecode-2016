@@ -7,3 +7,22 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
+
+task run << {
+    ant.path(id: 'classpath.run') {
+        fileset(dir:'libs', includes:'*.jar')
+        fileset(dir:'build/libs', includes:'*.jar')
+    }
+    ant.java(classpathref:'classpath.run', fork:true, classname:'battlecode.client.Main') {
+        jvmarg(value: '-Dapple.awt.graphics.UseQuartz=true')
+        jvmarg(value: '-Dsun.java2d.opengl=true')
+        arg(value: '-c bc.conf')
+    }
+}
+
+task mapeditor << {
+    ant.path(id: 'classpath.run') {
+        fileset(dir:'libs', includes:'*.jar')
+    }
+    ant.java(classpathref: 'classpath.run', fork:true, classname:'battlecode.mapeditor.st3')
+}
